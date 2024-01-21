@@ -1,141 +1,31 @@
+pub mod helper;
+
 fn main() {
-    println!("Rust: Variables and Data types");
+    let full_name = helper::name_helpers::get_full_name("Suriya", "Deveraj");
+    let age_plus_5 = helper::age_helpers::get_age_plus_5(26);
+    let sample = helper::sample_fn();
 
-    mutability_Shadowing_fn();
-    unit_fn();
-    integer_fn();
-    casting_fn();
-    string_fn();
-    tuple_fn();
-    array_fn();
+    println!("Full Name: {0}", full_name);
+    println!("Age: {age_plus_5}");
 }
 
-fn mutability_Shadowing_fn() {
-    // MUTABILITY
-    // By Default all variable are IMMUTABLE.
-    let var_1 = 10;
-    // var_1 = var_1 + 15; // Throws the error as the var_1 is immutable
-    println!("Immutable variable var_1{}", var_1);
+// Outer Attribute - Will tell the rustc to ignore the unused functions or variables
+#[allow(dead_code)]
+fn test() {
+    // ******* FUNCTIONS AND STAEMENTS ********
+    // The Code return within the () should be the expression.
+    // let y = (let a = 1); // Throws error as the code within () is not the expression, its the statement
 
-    let mut var_2 = 16;
-    println!("Mutable variable var_2(initial): {}", var_2);
-    var_2 = 100;
-    println!("Mutable variable var_2(changed): {}", var_2);
+    // The Code withing the {} is the combination of statement and expression
+    let y = {
+        let x = 10; // (1)
+        x + 1 // (2)
+    };
 
-    // SHADOWING
-    // Still the X is immutable
-    let x = 10;
-    // The let keyword reassign the value with same variable name.
-    let x = x + 10;
+    // (1) => Implies the statement as the variable as just assigned
+    // (2) => `x+1` is the expression resolves to value `11`. Also we can see there is no semicolon
+    //          that implies that block ends with expression and that value was returned.
+    //          no need of return statement
 
-    // Seperate block
-    {
-        let x = x + 25;
-        println!("Shadowed value withinn the block: {}", x)
-    }
-
-    println!("Shadowed value: {}", x)
-}
-
-fn unit_fn() {
-    // unit type - similar to void, null. (a tuple without a values)
-    // '()' is the unit data type
-    let x: ();
-
-    // Assigning the unit value to unit data type variable
-    let y: () = ();
-
-    println!("Y: {:?}", y);
-}
-
-fn integer_fn() {
-    // Integer has 2 main data types signed and unsigned
-    // 1. Signed - i{8, 16, 32, 64, 128, arch}
-    // As we know signed will accept the both +ve and -ve value
-    let signed_integer: i8 = 5;
-    let signed_neg_integer: i8 = -5;
-
-    // Below will throw error as the 8bit signed datatype will accept only -128 to 127 value
-    // let signed_integer: i8 = 255;
-
-    println!("signed_integer: {}", signed_integer);
-    println!("signed_neg_integer: {}", signed_neg_integer);
-
-    // unsigned will throw error because unsigned will not accept the -ve
-    // let unsigned_integer: u8 = -5;
-    let unsigned_integer: u8 = 255;
-
-    println!("unsigned_integer: {}", unsigned_integer);
-}
-
-fn casting_fn() {
-    // By default compiler takes f64;
-    let f64_value = 230.0;
-    let float_val: f32 = 255.0;
-    let x: u8 = 5;
-
-    // Below operation won't work because both the variabls are different data type
-    // let y = float_val - x;
-    // "as" keyword helps o typecast the data type
-    let y = float_val as u8 - x;
-    println!("Subratcted value: {}", y)
-}
-
-fn string_fn() {
-    let char_value = 'A';
-    let string_value = "suriya";
-
-    println!("{}", char_value);
-    println!("{}", string_value);
-}
-
-fn tuple_fn() {
-    // Similar to arrays - but has the ability to store different data types.
-
-    let tuple_value = ('A', "franklin", 1000, 40 as u8);
-
-    // {:?} is the delimeter that prevents the cause of issue while executing the code
-    // it removes the default formatterunder the hood
-    println!("{:?}", tuple_value);
-
-    // To Get value from the tuple
-    // Method 1 - Destructuring
-    let (a, b, c, d) = tuple_value;
-    println!("{}", a);
-    println!("{}", b);
-    println!("{}", c);
-    println!("{}", d);
-
-    // Method 2 - Accessing using the period
-    // tuplevalue.{position of element}
-    let a_value = tuple_value.0;
-    let b_value = tuple_value.1;
-    let c_value = tuple_value.2;
-
-    println!("{}", a_value);
-    println!("{}", b_value);
-    println!("{}", c_value);
-}
-
-fn array_fn() {
-    // Array also has the collection of data but in same data types.
-    // Best - when we know the number of elements - we also have vectors (as the size can vary on time)
-    // if you see return type [dat_type; length_of_array]
-    // Array postions will start from 0
-    let array_value = [1, 2, 3, 4, 5];
-    println!("Array elements: {:?}", array_value);
-
-    // To Get the data from the array
-    let first_array_el = array_value[0];
-    println!("Array element in first postion: {}", first_array_el);
-
-    // To Slice the elements in the array.
-    // [1..3] => where the elemnts wll be sliced from position 1(inclusive) to position 3 (exclusive) => only pos 1, 2
-    // [1..=3] => both 1st and 3rd position are inclusive
-    let sliced_elements = &array_value[1..3];
-    println!("SLiced elements: {:?}", sliced_elements);
-
-    // To create the array elemnet with length
-    let new_array = [3; 5];
-    println!("Array elements: {:?}", new_array);
+    println!("Resultant value: {y}"); // result = 11
 }

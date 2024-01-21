@@ -1,47 +1,113 @@
-// {use} keyword helps to import the libraries
-// {std} is the standard library
-use rand::{thread_rng, Rng};
-use std::cmp::Ordering;
-use std::io;
-
 fn main() {
-    println!("Guess the Number!");
+    println!("Rust: Variables and Data types");
 
-    // Variable name should be snake case
-    let scret_number = thread_rng().gen_range(1..=100);
+    unit_fn();
+    integer_fn();
+    casting_fn();
+    string_fn();
+    tuple_fn();
+    array_fn();
+}
 
-    loop {
-        println!("Please input your guess below");
+fn unit_fn() {
+    // unit type - similar to void, null.
+    // '()' is the unit data type
+    let x: ();
 
-        // {mut} keyword makes the variable to be mutable.
-        // {String::new()} - cerates the empty string without any hash in memory allocation, which makes the computation inexpensive
-        // I used the guess variable inside the loop because - while executing the code for the 2nd input - throwing an error
-        //      - because we have referenced the value.
-        let mut guess = String::new();
+    // Assigning the unit value to unit data type variable
+    let y: () = ();
 
-        // 1) io - input and output
-        // 2) stdin - to take the input from the user
-        // 3) We can also use like std::io::stdin if we did not imported std ::io at top
-        // 4) read_line - will get the data from the user and append them with the argument we passed.
-        // 5) "&"" indicates that the reference of the variable - so the same variable can be refered accross project
-        //      the referenced data will not be copied into the memory.
-        // 6) read_line responds with "Result" that is enumeration - means enums - which results in one ore more possible output
-        //      so its better to handle those values
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Handling the failure message");
+    println!("Y: {:?}", y);
+}
 
-        let guess_number_format: u32 = guess.trim().parse().expect("please enter the number");
+fn integer_fn() {
+    // Integer has 2 main data types signed and unsigned
+    // 1. Signed - i{8, 16, 32, 64, 128, arch}
+    // As we know signed will accept the both +ve and -ve value
+    let signed_integer: i8 = 5;
+    let signed_neg_integer: i8 = -5;
 
-        match guess_number_format.cmp(&scret_number) {
-            Ordering::Less => println!("small"),
-            Ordering::Greater => println!("big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
-    }
-    // "{}" implies that this is not static text (string literal)
-    // println!("Your Guess: {guess}");
+    // Below will throw error as the 8bit signed datatype will accept only -128 to 127 value
+    // let signed_integer: i8 = 255;
+
+    println!("signed_integer: {}", signed_integer);
+    println!("signed_neg_integer: {}", signed_neg_integer);
+
+    // unsigned will throw error because unsigned will not accept the -ve
+    // let unsigned_integer: u8 = -5;
+    let unsigned_integer: u8 = 255;
+
+    println!("unsigned_integer: {}", unsigned_integer);
+}
+
+fn casting_fn() {
+    // By default compiler takes f64;
+    let f64_value = 230.0;
+    let float_val: f32 = 255.0;
+    let x: u8 = 5;
+
+    // Below operation won't work because both the variabls are different data type
+    // let y = float_val - x;
+    // "as" keyword helps o typecast the data type
+    let y = float_val as u8 - x;
+    println!("Subratcted value: {}", y)
+}
+
+fn string_fn() {
+    let char_value = 'A';
+    let string_value = "suriya";
+
+    println!("{}", char_value);
+    println!("{}", string_value);
+}
+
+fn tuple_fn() {
+    // Similar to arrays - but has the ability to store different data types.
+
+    let tuple_value = ('A', "franklin", 1000, 40 as u8);
+
+    // {:?} is the delimeter that prevents the cause of issue while executing the code
+    // it removes the default formatterunder the hood
+    println!("{:?}", tuple_value);
+
+    // To Get value from the tuple
+    // Method 1 - Destructuring
+    let (a, b, c, d) = tuple_value;
+    println!("{}", a);
+    println!("{}", b);
+    println!("{}", c);
+    println!("{}", d);
+
+    // Method 2 - Accessing using the period
+    // tuplevalue.{position of element}
+    let a_value = tuple_value.0;
+    let b_value = tuple_value.1;
+    let c_value = tuple_value.2;
+
+    println!("{}", a_value);
+    println!("{}", b_value);
+    println!("{}", c_value);
+}
+
+fn array_fn() {
+    // Array also has the collection of data but in same data types.
+    // Best - when we know the number of elements - we also have vectors (as the size can vary on time)
+    // if you see return type [dat_type; length_of_array]
+    // Array postions will start from 0
+    let array_value = [1, 2, 3, 4, 5];
+    println!("Array elements: {:?}", array_value);
+
+    // To Get the data from the array
+    let first_array_el = array_value[0];
+    println!("Array element in first postion: {}", first_array_el);
+
+    // To Slice the elements in the array.
+    // [1..3] => where the elemnts wll be sliced from position 1(inclusive) to position 3 (exclusive) => only pos 1, 2
+    // [1..=3] => both 1st and 3rd position are inclusive
+    let sliced_elements = &array_value[1..3];
+    println!("SLiced elements: {:?}", sliced_elements);
+
+    // To create the array elemnet with length
+    let new_array = [3; 5];
+    println!("Array elements: {:?}", new_array);
 }

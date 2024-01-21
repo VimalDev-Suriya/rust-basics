@@ -1,6 +1,7 @@
 fn main() {
     println!("Rust: Variables and Data types");
 
+    mutability_Shadowing_fn();
     unit_fn();
     integer_fn();
     casting_fn();
@@ -9,8 +10,35 @@ fn main() {
     array_fn();
 }
 
+fn mutability_Shadowing_fn() {
+    // MUTABILITY
+    // By Default all variable are IMMUTABLE.
+    let var_1 = 10;
+    // var_1 = var_1 + 15; // Throws the error as the var_1 is immutable
+    println!("Immutable variable var_1{}", var_1);
+
+    let mut var_2 = 16;
+    println!("Mutable variable var_2(initial): {}", var_2);
+    var_2 = 100;
+    println!("Mutable variable var_2(changed): {}", var_2);
+
+    // SHADOWING
+    // Still the X is immutable
+    let x = 10;
+    // The let keyword reassign the value with same variable name.
+    let x = x + 10;
+
+    // Seperate block
+    {
+        let x = x + 25;
+        println!("Shadowed value withinn the block: {}", x)
+    }
+
+    println!("Shadowed value: {}", x)
+}
+
 fn unit_fn() {
-    // unit type - similar to void, null.
+    // unit type - similar to void, null. (a tuple without a values)
     // '()' is the unit data type
     let x: ();
 

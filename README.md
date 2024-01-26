@@ -17,3 +17,4 @@ Below code executes the file
 ```
 main.exe
 ```
+The exe file can be shared accross developers or consumers who can execute them, no need to any rust setup to exeute the exe file produced by the compiler. the rust follow "Ahead of time compilation"

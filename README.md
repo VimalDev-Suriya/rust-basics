@@ -11,7 +11,9 @@ In your terminal type `rustup`, this will provide all the helper commands to fol
 below code results in the creation of the executable file.
 ```
 rustc main.rs
+```
 
 Below code executes the file
 ```
 main.exe
+```

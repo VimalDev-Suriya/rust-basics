@@ -1,4 +1,5 @@
 pub mod branching;
+pub mod closures;
 
 fn main() {
     branching::if_block_mod::get_driver_licence_status();
@@ -12,5 +13,8 @@ fn main() {
     branching::loop_mod::loop_fn();
 
     let a = [1, 2, 3, 4];
-    branching::loop_mod::for_in_loop(a)
+    branching::loop_mod::for_in_loop(a);
+
+    println!("Closures");
+    closures::closures_fn();
 }

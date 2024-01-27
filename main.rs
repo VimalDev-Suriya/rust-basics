@@ -1,94 +1,147 @@
+// Defination of struct
+#[derive(Debug)] // This flag will help us that we can debug this struct
+struct User {
+    name: String,
+    age: u16,
+    employed: bool,
+}
+
+// Tuple structs
+#[derive(Debug)]
+struct Color(i8, i8, i8);
+
+#[derive(Debug)]
+struct Reactangle {
+    width: i32,
+    height: i32,
+}
+
+// Implementing the methods within the Structs
+impl Reactangle {
+    // &self shorthand property like (self: &Self)
+    fn area(&self) -> i32 {
+        self.height * self.width
+    }
+
+    fn compare_dimension(self: &Self, other: &Reactangle) -> bool {
+        if self.width == other.width && self.height == other.height {
+            return true;
+        }
+        false
+    }
+
+    fn square(size: i32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+
 fn main() {
-    // String literal
-    let var_1 = "string literal";
-    let var_ls = var_1; // Copying the value is fast and easy in stack
+    // Initaiting the Struct
+    let user_1 = User {
+        name: String::from("Suriya"),
+        age: 26,
+        employed: true,
+    };
 
-    println!("{var_ls} {var_1}");
+    println!("{:?}", user_1); // this console works only if we set this flag #[derive(Debug)]
+    println!("Age: {}", user_1.age);
+    println!("Name: {}", user_1.name);
+    println!("employed: {}", user_1.employed);
 
-    // I can't able to mutate the variable eventhough its the mutable, because its string literal and how the value stored in the memory(stack)
-    // I can assign the new value but can't able to alter the existing value
-    // var_1.push()
+    // Using one value of struct into another
+    // `..` similar to sperad operator in JS
+    // One difference is the below code prints User { name: "Dev", age: 26, employed: true }
+    //      not { name: "Suriya", age: 26, employed: true }, this is not working like JS
+    let user_2 = User {
+        name: String::from("Dev"),
+        ..user_1
+    };
 
-    // String - amount of memory allocated is unknown during compile time (because of Heap)
-    // String -> stores value in Heap
-    // I can alter the value in heap not in stack
-    let mut var_2 = String::from("hello");
+    println!("{:?}", user_2); // results = User { name: "Dev", age: 26, employed: true }
+    println!("{:?}", user_1); // results = User { name: "Suriya", age: 26, employed: true }
 
-    var_2.push('a'); // to push char
-    var_2.push_str("world"); //to push string
+    // ********* TUPLE STRUCT *************
+    println!("********* TUPLE STRUCT *************");
 
-    println!("{var_2}"); // result= helloaworld
+    let black = Color(0, 0, 0);
+    println!("{:?}", black); // We can access the indiviadual value as black.0
 
-    // Passing the value and cloning
-    let var_3 = String::from("test");
-    let var_4 = var_3;
+    // ************ Area Implemenation ***************
+    let width = 60;
+    let height = 40;
 
-    // Here "var_3" value passed (Moved) its value to "var_4" and the rust removes the var_3
-    // println!("Passed value: {var_4} {var_3}"); // Throws error
-    println!("{var_4}");
+    let area = reactangle_area(width, height);
 
-    // To perform the deep copy
-    let var_5 = String::from("test_2");
-    let var_6 = var_5.clone();
+    println!("Area of the reactangle: {area}");
 
-    println!("Passed value: {var_5} {var_6}");
+    // ************ Using the tuple ***************
+    let rect_dimension = (60, 40);
 
-    // ********** POINTERS ***************
-    println!("********** POINTERS ***************");
-    pointer_fn();
+    let area = tuple_rect_area(rect_dimension);
+    println!("Area of the reactangle: {area}");
 
-    // ********** Mutable References ***************
-    println!("********** Mutable References ***************");
-    mutable_ref();
+    // ************ Using the Struct ***************
+    let rect_dimension_struct_value = Reactangle {
+        width: 60,
+        height: 40,
+    };
+
+    let area_value = struct_rect_area(rect_dimension_struct_value);
+    println!("Area of the reactangle: {area_value}");
+
+    // Below throws the error (borrow of moved value: `rect_dimension_struct`)
+    //      as the value was passed into `struct_rect_area`, because of this we should use pointer
+    // println!("{:?}", rect_dimension_struct)
+
+    let react_dimension_struct = Reactangle {
+        width: 60,
+        height: 40,
+    };
+
+    let area_v = struct_rect_area_pointer(&react_dimension_struct);
+    println!("Area of the reactangle: {area_v}");
+    println!(
+        "react_dimension_struct pointer eg: {:#?}",
+        react_dimension_struct
+    );
+    println!("Pointer: {:?}", &react_dimension_struct);
+
+    // Calling the methods in rect
+    let rect_struct = Reactangle {
+        width: 50,
+        height: 70,
+    };
+
+    println!("Area: {}", rect_struct.area());
+
+    let rect_struct_1 = Reactangle {
+        width: 50,
+        height: 70,
+    };
+
+    println!("is same, {}", rect_struct_1.compare_dimension(&rect_struct));
+
+    // Self method
+    let val_2 = Reactangle::square(4);
+
+    println!("Area of Square, {}", val_2.area());
 }
 
-fn pointer_fn() {
-    // Passing the value
-    let str_1 = String::from("string_pointer");
-    let (s, length) = calculate_length(str_1);
-
-    println!("String pointer length: {:?}", length);
-
-    // Passing the reference (pointer)
-    let str_2 = String::from("string_value_pointer");
-    let str_length = calculate_length_ptr(&str_2);
-
-    println!("String pointer length pointer : {:?}", str_length);
+fn reactangle_area(w: i32, h: i32) -> i32 {
+    w * h
 }
 
-fn calculate_length(s: String) -> (String, usize) {
-    let length = s.len();
-    // (s, s.len()) // This won't work here as the tuple values
-    // like s => was assigned directly to tuple's first value
-    // s.len() after that s does not have any value since it was passed to tuple's first value
-    (s, length) // I am passing the tuple here
+fn tuple_rect_area(dimensions: (i32, i32)) -> i32 {
+    dimensions.0 * dimensions.1
 }
 
-fn calculate_length_ptr(s: &String) -> usize {
-    s.len()
+fn struct_rect_area(dimension: Reactangle) -> i32 {
+    dimension.height * dimension.width
 }
 
-fn mutable_ref() {
-    let mut str = String::from("hello");
-
-    // Comment out either one of the two code
-    // Commented out because we are passing the entire str to concat_str_mut
-    // let concant_str = concat_str_mut(str);
-    // println!("Mutable String : {concant_str}");
-
-    // Mutable string reference: mutable ref can be declared as "&mut"
-    let concant_str_ptr = concat_str_mut_ref(&mut str);
-
-    println!("Mutable String ref: {concant_str_ptr}");
-}
-
-// fn concat_str_mut(mut s: String) -> String {
-//     s.push_str("hello");
-//     s
-// }
-
-fn concat_str_mut_ref(s: &mut String) -> String {
-    s.push_str("added the string");
-
-    s.to_string()
+fn struct_rect_area_pointer(dimension: &Reactangle) -> i32 {
+    dimension.height * dimension.width
 }
